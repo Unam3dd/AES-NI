@@ -1,5 +1,5 @@
 # AES-NI
-use of the AES-NI instruction set
+use of the AES-NI instruction set read aes_ni.pdf for more information
 
 # Be careful
 
