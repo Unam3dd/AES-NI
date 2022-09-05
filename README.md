@@ -82,3 +82,58 @@ we will see it a little later when we will test the implementation that intel ma
 AES operates on an input data block of 128 bits and its output is also a data block of
 128 bits.
 
+# Round Keys ?
+
+AES-128, AES192, and AES-256 algorithms expand the cipher key to 10, 12, and 14
+round keys, respectively.
+The length of each round key is 128 bits.
+The algorithm for deriving the round keys from the cipher key is the called the AES Key Expansion.
+
+# AddRound Keys ?
+
+AddRoundKey is a (128-bit, 128-bit) -> 128-bit transformation, which is defined as the
+bit-wise xor of its two arguments.
+In the AES flow, these arguments are the State and the round key. AddRoundKey is its own inverse.
+
+# Counting the Rounds and the Round Keys ?
+
+The AES algorithm starts with a whitening step, implemented by XOR-ing the input data
+block with the first 128 bits of the cipher key. These 128 bits are the whitening key. The
+algorithm continues with 10/12/14 rounds, each one using another round key. When
+counting this way, the rounds and the round keys are counted from 1 to 10/12/14,
+accordingly. However, sometimes the whitening step is also referred to as “Round 0”,
+and the corresponding 128 bits of the whitening key are referred to as Round Key 0. In
+that case, the count of the AES rounds and the round keys starts from 0 to 10/12/14.
+We use these conventions interchangeably.
+
+# What is S-Box ?
+
+In cryptography, an S-box (substitution-box) is a basic component of symmetric key algorithms which performs substitution.
+In block ciphers, they are typically used to obscure the relationship between the key and the ciphertext, thus ensuring Shannon's property of confusion. Mathematically, an S-box is a vectorial Boolean function.[1]
+In general, an S-box takes some number of input bits, m, and transforms them into some number of output bits, n, where n is not necessarily equal to m.
+An m×n S-box can be implemented as a lookup table with 2m words of n bits each. Fixed tables are normally used, as in the Data Encryption Standard (DES), but in some ciphers the tables are generated dynamically from the key (e.g. the Blowfish and the Twofish encryption algorithms).
+is like a substitution table.
+
+Example usage of S-BOX and inverse S-BOX
+
+The S-Box and InvS-Box transformations can also be defined by lookup table as follows.
+The input to the lookup tables is a byte B [7-0] where x and y denote its low and high
+nibbles: x [3-0] = B [7-4], y [3-0] = B [3-0].The output byte is encoded in the table as
+a two digit number in hexadecimal notation. For example, S-Box lookup for the input 85
+(x=8; y=5 in hexadecimal notation) yields 97 in hexadecimal notation. InvS-Box lookup
+for the input 97 yields 85. we can determine bytes like that : 97 & 0xF for y and 97 >> 4 for x
+
+# Details of Each round
+
+Notes :
+		1. One AddRoundkey is applied before the first round
+		2. The MixColumns transformation is missing in the last round
+
+| STEP |   Details     |
+|------|:-------------:|
+|  0   |   State       |
+|  1   |   SubBytes    |
+|  2   |   ShiftRows   |
+|  3   |   MixColumns  |
+|  4   |   AddRoundKey |
+|  5   |  Output State |
