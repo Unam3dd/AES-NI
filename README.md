@@ -396,6 +396,7 @@ CTR mode: Counter mode
 More information at : https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm
 
 ![mod](mod.png)
+![CBC](cbc.png)
 
 # Attack on AES
 
