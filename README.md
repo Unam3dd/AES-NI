@@ -393,7 +393,7 @@ CFB mode: Cipher FeedBack mode
 OFB mode: Output FeedBack mode
 CTR mode: Counter mode
 
-More information at ![here](https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm/)
+More information at ![here](https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm)
 
 ![mod](mod.png)
 
