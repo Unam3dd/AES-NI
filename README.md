@@ -126,6 +126,7 @@ for the input 97 yields 85. we can determine bytes like that : 97 & 0xF for y an
 # Example of S-Box:
 
 S-Box lookup table
+```c
 |							y							 |
 |:------------------------------------------------------:|
 |     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f	 |
@@ -145,6 +146,7 @@ S-Box lookup table
 | 	d 70 3e b5 66 48 03 f6 0e 61 35 57 b9 86 c1 1d 9e	 |
 | 	e e1 f8 98 11 69 d9 8e 94 9b 1e 87 e9 ce 55 28 df	 |
 |  	f 8c a1 89 0d bf e6 42 68 41 99 2d 0f b0 54 bb 16	 |
+```
 
 # Details of Each round
 
