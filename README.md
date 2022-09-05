@@ -184,3 +184,29 @@ x	6 90 d8 ab 00 8c bc d3 0a f7 e4 58 05 b8 b3 45 06
 |  3   |   MixColumns  |
 |  4   |   AddRoundKey |
 |  5   |  Output State |
+
+# SubBytes Transformation
+
+SubBytes is the 16-byte -> 16-byte transformation defined by applying the S-Box
+transformation to each one of the 16 bytes of the input, namely:
+[P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A] -> [S-Box (P), S-Box (O), S-Box (N), S-Box (M), S-Box (L), S-Box (K), S-Box (J), S-Box (I), S-Box (H), S-Box (G), S-Box (F),
+S-Box (E), S-Box (D), S-Box (C), S-Box (B), S-Box (A)]
+
+Example :
+SubBytes (73744765635354655d5b56727b746f5d) = 8f92a04dfbed204d4c39b1402192a84c
+
+# Inverse SubBytes Transformation
+
+InvSubBytes is a 16-byte -> 16-byte transformation defined by applying the InvS-Box
+function to each byte of the input, namely:
+[P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A] -> [InvS-Box (P), InvS-Box (O), InvS-Box (N),
+InvS-Box (M), InvS-Box (L), InvS-Box (K), InvS-Box (J), InvS-Box (I), InvS-Box
+(H), InvS-Box (G), InvS-Box (F), InvS-Box (E), InvS-Box (D), InvS-Box (C),
+InvS-Box (B), InvS-Box (A)]
+
+Example :
+InvSubBytes (5d7456657b536f65735b47726374545d) = 8dcab9bc035006bc8f57161e00cafd8d
+
+# ShiftRows
+
+![ShiftRows](shiftrows.png)
