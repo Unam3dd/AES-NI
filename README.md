@@ -374,3 +374,31 @@ KeyExpansion(byte key[4*Nk], word w[Nb*(Nr+1)], Nk)
  			i = i + 1
 		end while
 ```
+
+# Initialization Vector (IV)
+
+An initialization vector (or IV) are used to ensure that the same value encrypted multiple times, even with the same secret key, will not always result in the same encrypted value. This is an added security layer. If strings did always have the same result when encrypted, it would be easier for someone to figure out what the starting value was just through brute force trial and error.
+
+In the example above, an iv is created by generating a random string of the same length as the block size (so our iv will be 16 bytes, or characters, as we mentioned above). This value is then passed in to the initialization of the cipher so that it can be used by the library code when encrypting the value.
+
+# Padding What is that ?
+
+When we actually call encrypt on our cipher (which has been initialized with the encryption key, encryption mode, and initialization vector), you’ll notice we’re also calling pad on the value we’re encrypting first. This goes back to the concept of “block size” that we talked about earlier. Because AES is a block cipher that works on “blocks” of a predefined length, if the value we’re encrypting isn’t cleanly divisible by that length, it won’t work. Calling pad on the value adds empty bytes to the end of your string until it’s the correct number of bytes long.
+
+# The difference in five modes in the AES encryption algorithm
+
+ECB mode: Electronic Code Book mode
+CBC mode: Cipher Block Chaining mode
+CFB mode: Cipher FeedBack mode
+OFB mode: Output FeedBack mode
+CTR mode: Counter mode
+
+More information at ![here](https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm/)
+
+![mod](mod.png)
+
+# Attack on AES
+
+PA: Padding attack
+CPA: Chosen Plaintext Attack
+CCA: Chosen Ci
