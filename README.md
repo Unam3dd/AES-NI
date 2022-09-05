@@ -125,9 +125,8 @@ for the input 97 yields 85. we can determine bytes like that : 97 & 0xF for y an
 
 # Details of Each round
 
-Notes :
-	1 -One AddRoundkey is applied before the first round
-	2 -The MixColumns transformation is missing in the last round
+1 - One AddRoundkey is applied before the first round
+2 - The MixColumns transformation is missing in the last round
 
 | STEP |   Details     |
 |------|:-------------:|
