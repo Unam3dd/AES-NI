@@ -207,7 +207,7 @@ InvS-Box (B), InvS-Box (A)]
 Example :
 InvSubBytes (5d7456657b536f65735b47726374545d) = 8dcab9bc035006bc8f57161e00cafd8d
 
-# ShiftRows
+# ShiftRows Transformation
 
 ![ShiftRows](shiftrows.png)
 
@@ -230,3 +230,147 @@ Example Inversed ShiftRows:
 InvShiftRows (7b5b54657374566563746f725d53475d) = 5d7456657b536f65735b47726374545d 
 
 ![ShiftRowsSchema](inversed_shiftrows.png)
+
+# MixColumns Transformation
+
+MixColumns is a 16-byte -> 16-byte transformation operating on the columns of the 4x4
+matrix representation of the input. The transformation treats each column as a third
+degree polynomial with coefficients in AES-GF256-Field. Each column of the 4x4 matrix
+representation of the State is multiplied by polynomial a(x) = {03}x3
+ + {01}x2
+ + {01}x
++ {02} and reduced modulo x4
+ + 1. Here, { } denotes an element in AES-GF256-Field.
+The equations that define MixColumns are detailed in Figure 3. The transformation is [P
+– A] -> [P’ – A’]; the symbol • denotes multiplication in AES-GF256-Field (i.e., • is a
+carry-less multiplication followed by reduction modulo 0x11b); the symbol + denotes
+XOR. 
+
+```
+A' = ({02} • A) + ({03} • B) + C + D
+B' = A + ({02} • B) + ({03} • C) + D
+C' = A + B + ({02} • C) + ({03} • D)
+D' = ({03} • A) + B + C + ({02} • D)
+E' = ({02} • E) + ({03} • F) + G + H
+F' = E + ({02} • F) + ({03} • G) + H
+G' = E + F + ({02} • G) + ({03} • H)
+H' = ({03} • E) + F + G + ({02} • H)
+I' = ({02} • I) + ({03} • J) + K + L
+J' = I + ({02} • J) + ({03} • K) + L
+K' = I + J + ({02} • K) + ({03} • L)
+L' = ({03} • I) + J + K + ({02} • L)
+M' = ({02} • M) + ({03} • N) + O + P
+N' = M + ({02} • N) + ({03} • O) + P
+O' = M + N + ({02} • O) + ({03} • P)
+P' = ({03} • M) + N + O + ({02} • P)
+```
+
+Example of MixColumns
+
+MixColums (627a6f6644b109c82b18330a81c3b3e5) = 7b5b54657374566563746f725d53475d
+
+# InvMixColumns Transformation
+
+InvMixColumns is a 16-byte Æ 16-byte transformation operating on the columns of the
+4x4 matrix representation of the input. It is the inverse of MixColumns. The
+transformation treats each column as a third degree polynomial with coefficients in AESGF256-Field. Each column of the 4x4 matrix representation of the state is multiplied by
+polynomial a-1(x) = {0b}x3
+ + {0d}x2
+ + {09}x + {0e} and reduced modulo x4
+ + 1. The equations that define InvMixColumns are detailed in Figure 4. The transformation is [P – A] -> [P’– A’]; 
+the symbol • denotes multiplication in AES-GF256-Field (i.e., • is a carry-less
+multiplication followed by reduction mod 0x11b); the symbol + denotes XOR.
+
+```
+A' = ({0e} • A) + ({0b} • B) + ({0d} • C) + ({09} • D)
+B' = ({09} • A) + ({0e} • B) + ({0b} • C) + ({0d} • D)
+C' = ({0d} • A) + ({09} • B) + ({0e} • C) + ({0b} • D)
+D' = ({0b} • A) + ({0d} • B) + ({09} • C) + ({0e} • D)
+E' = ({0e} • E) + ({0b} • F) + ({0d} • G) + ({09} • H)
+F' = ({09} • E) + ({0e} • F) + ({0b} • G) + ({0d} • H)
+G' = ({0d} • E) + ({09} • F) + ({0e} • G) + ({0b} • H)
+H' = ({0b} • E) + ({0d} • F) + ({09} • G) + ({0e} • H)
+I' = ({0e} • I) + ({0b} • J) + ({0d} • K) + ({09} • L)
+J' = ({09} • I) + ({0e} • J) + ({0b} • K) + ({0d} • L)
+K' = ({0d} • I) + ({09} • J) + ({0e} • K) + ({0b} • L)
+L' = ({0b} • I) + ({0d} • J) + ({09} • K) + ({0e} • L)
+M' = ({0e} • M) + ({0b} • N) + ({0d} • O) + ({09} • P)
+N' = ({09} • M) + ({0e} • N) + ({0b} • O) + ({0d} • P)
+O' = ({0d} • M) + ({09} • N) + ({0e} • O) + ({0b} • P)
+P' = ({0b} • M) + ({0d} • N) + ({09} • O) + ({0e} • P)
+```
+
+InvMixColumns (8dcab9dc035006bc8f57161e00cafd8d) = d635a667928b5eaeeec9cc3bc55f5777
+
+# SubWord Transformation
+
+SubWord is the doubleword -> doubleword transformation defined by applying the SBox transformation to each one of the 4 bytes of the input, namely:
+SubWord (X) = [S-Box(X[31-24]), S-Box(X[23-16]), S-Box(X[15-8]), S-Box(X[7-0])]
+
+Example :
+	SubWord (73744765) = 8f92a04d
+
+# ROTWord Transformation
+
+RotWord is the doubleword -> doubleword transformation defined by:
+RotWord (X [31-0]) = [X[7-0], X [31-24], X [23-16], X [15-8]]
+(in C language notation, RotWord(X) = (X >> 8) | (X << 24))
+
+RotWord (3c4fcf09) = 093c4fcf
+
+# Round Constant
+
+The AES key expansion procedure uses ten constants called Round Constants
+(RCON hereafter). The ten RCON values are RCON [i] = {02}i-1 for i=1, 2, …, 10,
+where the operations are in AES-GF256-Field.
+Each RCON value is an element of AES-GF256-Field, and is encoded here as a byte. The
+ten RCON values are (in hexadecimal notation):
+RCON [1] = 0x01, RCON [2] = 0x02, RCON [3] = 0x04, RCON [4] = 0x08, RCON [5] = 0x10,
+RCON [6] = 0x20, RCON [7] = 0x40, RCON [8] = 0x80, RCON [9] = 0x1B, RCON [10] = 0x36.
+Remark: in the following RCON values are also viewed, interchangedly, as doublewords
+where their 24 leftmost bits equal 0. For example, RCON [7] = 0x00000040 (in
+hexadecimal notation).
+
+
+# Key Expansion
+
+AES uses a cipher key whose length is 128, 192 or 256 bits. This cipher key is
+expanded into 10, 12, or 14 round keys, respectively, using the “Key Expansion”
+algorithm, where the length of each round key is 128 bits. This Key Expansion
+algorithm depends only on the cipher key. Since it is independent of the processed data,
+it can be (and typically is) executed prior to the encryption/decryption phase. At the
+heart of the Key Expansion algorithm is the combination of the transformations
+SubWord(RotWord(tmp)) and SubWord(tmp) and the use of the RCON values. Figure 5
+shows the pseudo code for the AES Key Expansion algorithm (as described in FIPS197).
+
+```c
+Parameters
+Nb = 4 (data blocks are of 128 bits)
+Nk = number of doublewords in the cipher key
+ (4, 6, 8 for AES-128, AES-192, AES-256, resp.)
+Nr = number of rounds in the cipher
+ (Nr=10, 12, 14 for AES-128, AES-192, AES-256, respectively).
+```
+
+```c
+The Key Expansion routine
+KeyExpansion(byte key[4*Nk], word w[Nb*(Nr+1)], Nk)
+	begin
+		word tmp
+		i = 0
+		while (i < Nk)
+ 			w[i] = word(key[4*i], key[4*i+1], key[4*i+2], key[4*i+3])
+ 			i = i+1
+		end while
+		i = Nk
+		while (i < Nb * (Nr+1))
+ 			tmp = w[i-1]
+ 			if (i mod Nk = 0)
+ 				tmp = SubWord(RotWord(tmp)) xor RCON[i/Nk]
+			else if (Nk = 8)
+ 				tmp = SubWord(tmp)
+ 			end if
+ 			w[i] = w[i-Nk] xor tmp
+ 			i = i + 1
+		end while
+```
