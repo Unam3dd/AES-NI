@@ -210,3 +210,23 @@ InvSubBytes (5d7456657b536f65735b47726374545d) = 8dcab9bc035006bc8f57161e00cafd8
 # ShiftRows
 
 ![ShiftRows](shiftrows.png)
+
+ShiftRows is the following byte-wise permutation: (15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+4, 3, 2, 1, 0) -> (11, 6, 1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15, 10, 5, 0). 
+In the P-A notation is reads [P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A] -> [L,G,B,M,H,C,N,I,D,O,J,E,P,K,F,A].
+Its name comes from viewing the transformation as an operation on the 4x4 matrix
+representation of the State. Under this view, the first row is unchanged, the second row
+is left rotated by one byte position, the third row is left rotated by two byte positions,
+and the fourth row is left rotated by three byte positions.
+
+Example ShiftRows:
+ShiftRows (7b5b54657374566563746f725d53475d) = 73744765635354655d5b56727b746f5d
+
+InvShiftRows is the inverse of ShiftRows.
+It is the following byte-wise permutation: (15,14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0) -> (3, 6, 9, 12, 15, 2, 5, 8, 11, 14, 1, 4, 7, 10, 13, 0). 
+In the P-A notation is reads [P,O,N,M,L,K,J,I,H,G,F,E,D,C,B,A] -> [D,G,J,M,P,C,F,I,L,O,B,E,H,K,N,A] 
+
+Example Inversed ShiftRows:
+InvShiftRows (7b5b54657374566563746f725d53475d) = 5d7456657b536f65735b47726374545d 
+
+![ShiftRowsSchema](inversed_shiftrows.png)
