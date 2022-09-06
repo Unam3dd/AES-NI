@@ -35,8 +35,8 @@ _check_support_aes_ni:
 	or eax, 0x1
 	cpuid
 	and ecx, 0x2000000
-	xor ecx, 0x2000000
-	jnz _error_aes_ni
+	cmp ecx, 0x2000000
+	jne _error_aes_ni
 
 _exit_success:
 	xor rdi, rdi
