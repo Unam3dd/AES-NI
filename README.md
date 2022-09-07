@@ -269,6 +269,8 @@ Example of MixColumns
 
 MixColums (627a6f6644b109c82b18330a81c3b3e5) = 7b5b54657374566563746f725d53475d
 
+Understand MixColumns transformation : https://www.youtube.com/watch?v=WPz4Kzz6vk4
+
 # InvMixColumns Transformation
 
 InvMixColumns is a 16-byte Æ 16-byte transformation operating on the columns of the
@@ -403,3 +405,10 @@ More information at : https://www.highgo.ca/2019/08/08/the-difference-in-five-mo
 PA: Padding attack
 CPA: Chosen Plaintext Attack
 CCA: Chosen Ci
+
+# Galois Field
+
+https://www.samiam.org/galois.html
+
+# G functions and Key Expansion 
+https://www.youtube.com/watch?v=w4aWIVhcUyo

@@ -18,16 +18,21 @@ public _start
 
 extrn exit
 extrn printf
+extrn atoi
+extrn cipher
+
+section '.bss' writeable
+	key rb 0x100
 
 section '.data' writeable
-	usage db "usage : %s <message> <key> --help", 0xa, 0x0
+	usage db "usage : %s <message> <key> <len_msg>", 0xa, 0x0
 	aes_ni_error db "Error : your CPU does not support AES-NI extension :(", 0xa, 0x0
 
 section '.text' executable
 
 _start:
 	mov edx, dword [rsp]
-	xor edx, 0x3
+	xor edx, 0x4
 	jnz _error_fmt
 
 _check_support_aes_ni:
@@ -37,6 +42,9 @@ _check_support_aes_ni:
 	and ecx, 0x2000000
 	cmp ecx, 0x2000000
 	jne _error_aes_ni
+	mov rdi, qword [rsp + 0x10]
+	mov rsi, qword [rsp + 0x18]
+	call cipher
 
 _exit_success:
 	xor rdi, rdi
