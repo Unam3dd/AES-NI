@@ -412,3 +412,6 @@ https://www.samiam.org/galois.html
 
 # G functions and Key Expansion 
 https://www.youtube.com/watch?v=w4aWIVhcUyo
+
+# Cipher (ECB, CBC, CTR, OFB, CFB etc..)
+https://fr.wikipedia.org/wiki/Mode_d%27op%C3%A9ration_(cryptographie)
