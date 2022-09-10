@@ -6,10 +6,10 @@
 //
 //////////////////////////////////
 
-static unsigned char get_nibble_byte(char c)
+static char	get_nibble_byte(char c)
 {
-	return ((c - 0x61 >= 0x0 && c - 0x61 <= 0xF) ? (0xA + (c - 0x61))
-			: (c - 0x41 >= 0x0 && c - 0x41 <= 0xF) ? (0xA + (c - 0x41))
+	return ((c >= 'a' && c <= 'f') ? (0xA + (c - 'a'))
+			: (c >= 'A' && c <= 'F') ? (0xA + (c - 'A'))
 			: (c & 0xF)
 			);
 }
