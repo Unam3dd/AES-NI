@@ -18,6 +18,7 @@
 
 #define B64_SIZE_TABLE 0x40
 #define B64D_SIZE_TABLE (B64_SIZE_TABLE << 2)
+#define B64_INVALID 0x66
 
 //////////////////////////////////
 //

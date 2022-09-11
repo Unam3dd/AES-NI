@@ -34,12 +34,8 @@ int main(int ac, char **av)
 		printf("Decoded %s\n", decoded);
 	base64_encode(av[1], base64_buf, strlen((const char *)av[1]), &writed);
 	printf("%s\n", base64_buf);
-	show_base64_decode_table();
 	memset(decoded, 0, sizeof(decoded));
-	readed = writed;
-	base64_decode(base64_buf, decoded, readed, &writed);
+	base64_decode(base64_buf, decoded, strlen((char *)base64_buf), &writed);
 	printf("%s\n", decoded);
-	for (int i = 0; i < strlen((const char *)decoded); i++)
-		printf("%d\n", decoded[i]);
 	return (0);
 }

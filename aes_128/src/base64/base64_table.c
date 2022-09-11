@@ -18,7 +18,7 @@ const unsigned char	BASE64_TABLE[B64_SIZE_TABLE] = {
 };
 
 const unsigned char	BASE64D_TABLE[B64D_SIZE_TABLE] = {
-	66, 66, 66, 66, 66, 66, 66, 66,
+	0, 66, 66, 66, 66, 66, 66, 66,
 	66, 66, 66, 66, 66, 66, 66, 66, 
 	66, 66, 66, 66, 66, 66, 66, 66, 
 	66, 66, 66, 66, 66, 66, 66, 66,

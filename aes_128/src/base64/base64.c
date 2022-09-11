@@ -52,17 +52,25 @@ uint8_t	*base64_decode(uint8_t *data, uint8_t *out, size_t len, size_t *len_dec)
 {
 	if (!data || !out)
 		return (NULL);
-	uint8_t		*tmp = out;
-	uint32_t	block = 0;
-
-	for (int i = 0; i < (int)len; i += 3, block = 0) {
-		block = BASE64D_TABLE[(int)(data[i])] << 0x12 | BASE64D_TABLE[(int)(data[i + 1])] << 0xC \
-				| BASE64D_TABLE[(int)(data[i + 2])] << 0x6 | BASE64D_TABLE[(int)(data[i + 3])];
+	if (len % 4)
+		return (NULL);
+	(void)len_dec;
+	int	pad = 0;
+	uint32_t block = 0;
+	uint8_t	*tmp = (uint8_t *)strchr((char *)data, '=');
+	if (tmp) {
+		pad = strspn((char *)tmp, "=");
+		memset(tmp, 0, pad);
+		len -= pad;
+	}
+	tmp = out;
+	for (int i = 0; i < (int)len; i += 4) {
+		block = (BASE64D_TABLE[data[i]]) << 0x12 	 | (BASE64D_TABLE[data[i + 1]]) << 0xC;
+		block |= (BASE64D_TABLE[data[i + 2]]) << 0x6 | (BASE64D_TABLE[data[i + 3]]);
 		*tmp++ = (block >> 0x10) & 0xFF;
 		*tmp++ = (block >> 0x8) & 0xFF;
-		*tmp++ = block & 0xFF;
+		*tmp++ = (block) & 0xFF;
 	}
-	*len_dec = tmp - out;
 	*tmp = 0;
 	return (out);
 }
