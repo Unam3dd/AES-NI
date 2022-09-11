@@ -56,8 +56,18 @@ struct	aes_buf_t
 
 struct aes_ctx_t
 {
-	uint8_t	mod;
+	uint8_t		mod;
 };
+
+//////////////////////////////////
+//
+//			ASSEMBLY PART
+//
+//////////////////////////////////
+
+__uint128_t	aes_encrypt_block(uint8_t *data, uint8_t *key);
+void		xor_xmm_registers(void);
+void		key_schedule_registers(char *key, size_t len);
 
 //////////////////////////////////
 //
@@ -65,7 +75,7 @@ struct aes_ctx_t
 //
 //////////////////////////////////
 
-size_t	aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
+int	aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 
 //////////////////////////////////
 //
@@ -73,7 +83,7 @@ size_t	aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 //
 //////////////////////////////////
 
-size_t	aes_uncipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
+int	aes_uncipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 
 //////////////////////////////////
 //

@@ -4,6 +4,13 @@
 
 //////////////////////////////////
 //
+//			REF
+//
+//////////////////////////////////
+//ref : https://fr.wikipedia.org/wiki/Base64
+
+//////////////////////////////////
+//
 //			ENCODER
 //
 //////////////////////////////////
@@ -50,11 +57,8 @@ uint8_t	*base64_encode(uint8_t *data, uint8_t *out, size_t len, size_t *len_enc)
 
 uint8_t	*base64_decode(uint8_t *data, uint8_t *out, size_t len, size_t *len_dec)
 {
-	if (!data || !out)
+	if (!data || !out || ((len + (len >> 0x3e)) & 0x3))
 		return (NULL);
-	if (len % 4)
-		return (NULL);
-	(void)len_dec;
 	int	pad = 0;
 	uint32_t block = 0;
 	uint8_t	*tmp = (uint8_t *)strchr((char *)data, '=');
@@ -71,27 +75,7 @@ uint8_t	*base64_decode(uint8_t *data, uint8_t *out, size_t len, size_t *len_dec)
 		*tmp++ = (block >> 0x8) & 0xFF;
 		*tmp++ = (block) & 0xFF;
 	}
+	*len_dec = tmp - out;
 	*tmp = 0;
 	return (out);
-}
-
-//////////////////////////////////
-//
-//			DECODING TABLE
-//
-//////////////////////////////////
-
-void	show_base64_decode_table(void)
-{
-	char	DECODING_TABLE[0x100];
-	int		i = 0;
-
-	memset(DECODING_TABLE, -1, sizeof(DECODING_TABLE));
-
-	for (i = 0; i < (int)sizeof(BASE64_TABLE); i++)
-		DECODING_TABLE[(int)BASE64_TABLE[i]] = i;
-	printf("[");
-	for (i = 0; i < (int)sizeof(DECODING_TABLE); i++)
-		printf("%d, ", DECODING_TABLE[i]);
-	printf("]\n");
 }
