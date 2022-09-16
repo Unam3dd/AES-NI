@@ -9,6 +9,16 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <wmmintrin.h> // AES-128 key expansion
+
+//////////////////////////////////
+//
+//			DEFINES
+//
+//////////////////////////////////
+
+#define AES_128_NROUND 10
+#define AES_N_MOD 0x2
 
 //////////////////////////////////
 //
@@ -16,9 +26,18 @@
 //
 //////////////////////////////////
 
-typedef struct	aes_ctx_t 	aes_ctx_t;
-typedef struct 	aes_buf_t	aes_buf_t;
-typedef enum	aes_mod_t	aes_mod_t;
+typedef struct	aes_ctx_t 		aes_ctx_t;
+typedef struct 	aes_buf_t		aes_buf_t;
+typedef struct	aes_mod_t		aes_mod_t;
+typedef enum	aes_mod_flag_t	aes_mod_flag_t;
+
+//////////////////////////////////
+//
+//			CALLBACK
+//
+//////////////////////////////////
+
+typedef	int	(*callback_t)(const uint8_t *in, uint8_t *out, size_t length, char *key, uint8_t iv[16]);
 
 //////////////////////////////////
 //
@@ -26,7 +45,7 @@ typedef enum	aes_mod_t	aes_mod_t;
 //
 //////////////////////////////////
 
-enum aes_mod_t
+enum aes_mod_flag_t
 {
 	AES_128_ECB,
 	AES_128_CBC
@@ -56,18 +75,68 @@ struct	aes_buf_t
 
 struct aes_ctx_t
 {
+	uint8_t		keys_schedule[AES_128_NROUND << 4];
 	uint8_t		mod;
+};
+
+struct aes_mod_t
+{
+	aes_mod_flag_t	mod;
+	callback_t		enc;
+	callback_t		dec;
 };
 
 //////////////////////////////////
 //
-//			ASSEMBLY PART
+//			CPUID
 //
 //////////////////////////////////
 
-__uint128_t	aes_encrypt_block(uint8_t *data, uint8_t *key);
-void		xor_xmm_registers(void);
-void		key_schedule_registers(char *key, size_t len);
+#define AES_CPUID_VALUE 0x2000000
+#define cpuid(func,ax,bx,cx,dx)\
+ __asm__ __volatile__ ("cpuid":\
+ "=a" (ax), "=b" (bx), "=c" (cx), "=d" (dx) : "a" (func));
+
+int	check_cpu_support_aes(void);
+
+//////////////////////////////////
+//
+//			KEY EXPANSION
+//
+//////////////////////////////////
+
+inline	__m128i AES_128_ASSIST (__m128i tmp1, __m128i tmp2)
+{
+	__m128i tmp3;
+
+	tmp2 = _mm_shuffle_epi32(tmp2, 0xff); // function started by _ is gcc builtins
+	tmp3 = _mm_slli_si128(tmp1, 0x4);
+	tmp1 = _mm_xor_si128(tmp1, tmp3);
+
+	tmp3 = _mm_slli_si128(tmp3, 0x4);
+	tmp1 = _mm_xor_si128(tmp1, tmp3);
+	tmp3 = _mm_slli_si128(tmp3, 0x4);
+	tmp1 = _mm_xor_si128(tmp1, tmp3);
+	tmp1 = _mm_xor_si128(tmp1, tmp2);
+	return (tmp1);
+}
+
+//////////////////////////////////
+//
+//		KEY SCHEDULING
+//
+//////////////////////////////////
+
+void	aes_128_key_expansion(const uint8_t *userkey, uint8_t *key);
+
+//////////////////////////////////
+//
+//			ECB
+//
+//////////////////////////////////
+
+int		aes_128_ecb_enc(const uint8_t *in, uint8_t *out, size_t length, char *key, uint8_t iv[16]);
+int		aes_128_ecb_dec(const uint8_t *in, uint8_t *out, size_t length, char *key, uint8_t iv[16]);
 
 //////////////////////////////////
 //
@@ -75,7 +144,7 @@ void		key_schedule_registers(char *key, size_t len);
 //
 //////////////////////////////////
 
-int	aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
+int		aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 
 //////////////////////////////////
 //
@@ -83,24 +152,14 @@ int	aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 //
 //////////////////////////////////
 
-int	aes_uncipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
+int		aes_uncipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 
 //////////////////////////////////
 //
-//			HEX ENCODE
+//		MOD OPERATION TABLE
 //
 //////////////////////////////////
 
-uint8_t	*hex_encode(uint8_t	*data, uint8_t *out, size_t d_len, size_t o_len);
-uint8_t	*hex_decode(uint8_t *data, uint8_t *out, size_t d_len, size_t o_len);
-
-//////////////////////////////////
-//
-//			FORMAT
-//
-//////////////////////////////////
-
-uint8_t	*to_lower(uint8_t *data);
-uint8_t	*to_upper(uint8_t *data);
+extern const	aes_mod_t	aes_cb_table[AES_N_MOD];
 
 #endif

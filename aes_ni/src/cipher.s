@@ -88,5 +88,5 @@ cipher:
 	aesenc xmm15, xmm11
 	aesenc xmm15, xmm12
 	aesenclast xmm15, xmm13
-	movdqu xmm1, xmm14
+	movdqu xmm1, xmm15
 	ret

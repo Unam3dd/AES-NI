@@ -1,27 +1,29 @@
 NAME = aeslib.a
-FASM = fasm
 CC = gcc
-FASM_SRC = $(wildcard src/**/*.s)
 C_SRC = $(wildcard src/**/*.c)
-FASM_OBJ = $(FASM_SRC:.s=.o)
 C_OBJ = $(C_SRC:.c=.o)
-CFLAGS = -Wall -Wextra -Werror -Iincludes
+CFLAGS = -Wall -Wextra -Werror -Iincludes -maes
+UNIT_SRC = $(wildcard test/*.c)
+UNIT_OBJ = $(UNIT_SRC:.c=)
 
 all: $(NAME)
-
-%.o: %.s
-	$(FASM) $< $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -O3 -m64 -c $< -o $@
 
 $(NAME): $(FASM_OBJ) $(C_OBJ)
-	ar rcs $(NAME) $(C_OBJ) $(FASM_OBJ)
+	ar rcs $(NAME) $(C_OBJ)
 
 clean:
 	rm -rf $(C_OBJ)
-	rm -rf $(FASM_OBJ)
 
+unit:
+	$(CC) -Iincludes test/hex_encoder.c aeslib.a -O3 -o test/hex_encoder 
+	$(CC) -Iincludes test/utils.c aeslib.a -O3 -o test/utils
+
+unit_clean: $(UNIT_OBJ)
+	rm -rf $(UNIT_OBJ)
+	
 fclean: clean
 	rm -rf $(NAME)
 
