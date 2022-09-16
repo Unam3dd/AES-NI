@@ -20,6 +20,10 @@ clean:
 unit:
 	$(CC) -Iincludes test/hex_encoder.c aeslib.a -O3 -o test/hex_encoder 
 	$(CC) -Iincludes test/utils.c aeslib.a -O3 -o test/utils
+	$(CC) -Iincludes test/hex_decoder.c aeslib.a -O3 -o test/hex_decoder
+	$(CC) -Iincludes test/base64_encoder.c aeslib.a -O3 -o test/base64_encoder
+	$(CC) -Iincludes test/base64_decoder.c aeslib.a -O3 -o test/base64_decoder
+	$(CC) -Iincludes test/aes_ecb_test.c aeslib.a -O3 -o test/aes_ecb_test
 
 unit_clean: $(UNIT_OBJ)
 	rm -rf $(UNIT_OBJ)

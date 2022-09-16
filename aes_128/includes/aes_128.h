@@ -127,7 +127,7 @@ inline	__m128i AES_128_ASSIST (__m128i tmp1, __m128i tmp2)
 //
 //////////////////////////////////
 
-void	aes_128_key_expansion(const uint8_t *userkey, uint8_t *key);
+void	aes_128_key_expansion(const uint8_t *key, uint8_t *keysched);
 
 //////////////////////////////////
 //

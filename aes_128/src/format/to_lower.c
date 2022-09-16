@@ -17,5 +17,6 @@ uint8_t	*to_lower(uint8_t *data)
 		*tmp = (*tmp >= 'A' && *tmp <= 'Z') ? (*tmp ^ 0x20) : *tmp;
 		tmp++;
 	}
+	*tmp = 0;
 	return (data);
 }

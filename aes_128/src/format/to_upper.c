@@ -17,5 +17,6 @@ uint8_t	*to_upper(uint8_t *data)
 		*tmp = ((*tmp >= 'a' && *tmp <= 'z') ? (*tmp ^ 0x20) : *tmp);
 		tmp++;
 	}
+	*tmp = 0;
 	return (data);
 }

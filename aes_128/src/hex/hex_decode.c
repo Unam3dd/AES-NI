@@ -6,6 +6,8 @@
 //
 //////////////////////////////////
 
+#include <stdio.h>
+
 static char	get_nibble_byte(char c)
 {
 	return ((c >= 'a' && c <= 'f') ? (0xA + (c - 'a'))
@@ -27,7 +29,7 @@ uint8_t	*hex_decode(uint8_t *data, uint8_t *buf, size_t d_len, size_t o_len)
 		*tmp = get_nibble_byte(*data++);
 		*tmp <<= 4;
 		*tmp++ |= get_nibble_byte(*data++);
-		d_len--;
+		d_len -= 2;
 	}
 	*tmp = 0;
 	return (buf);
