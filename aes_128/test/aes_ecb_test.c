@@ -21,7 +21,7 @@ int main(void)
 	unsigned char	buf[0x100];
 	unsigned char	dec[0x100];
 	unsigned char	keys[0x100];
-	unsigned char	data[] = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+	unsigned char	data[] = "hello world on est la mon gars ouais ouais la 6t";
 	unsigned char	keyy[] = "AAAAAAAAAAAAAAAA";
 	size_t			len = 0;
 
@@ -34,14 +34,16 @@ int main(void)
 	for (int x = 0; x < 10; x++)
 		print_m128i_with_string("KEY:", (((__m128i *)keys)[x]));
 
-	aes_128_ecb_enc(data, buf, 17, keys, NULL);
+	aes_128_ecb_enc(data, buf, 32, keys, NULL);
 
 	print_m128i_with_string("AES-DATA", (((__m128i *)buf)[0]));
+	print_m128i_with_string("AES-DATA", (((__m128i *)buf)[1]));
 	print_m128i_with_string("DATA", (((__m128i *)dec)[0]));
 
-	aes_128_ecb_dec(buf, dec, 17, keys, NULL);
+	aes_128_ecb_dec(buf, dec, 32, keys, NULL);
 
 	print_m128i_with_string("DATA", (((__m128i *)dec)[0]));
+	print_m128i_with_string("DATA", (((__m128i *)dec)[1]));
 
 	return (0);
 }
