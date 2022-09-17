@@ -75,7 +75,8 @@ struct	aes_buf_t
 
 struct aes_ctx_t
 {
-	uint8_t		keys_schedule[AES_128_NROUND << 4];
+	uint8_t		keys_schedule[0x10 << 4];
+	uint8_t		dec_schedule[0x10 << 4];
 	uint8_t		mod;
 };
 
@@ -127,6 +128,7 @@ inline	__m128i AES_128_ASSIST (__m128i tmp1, __m128i tmp2)
 //
 //////////////////////////////////
 
+void	aes_128_key_decrypt(const uint8_t *key, aes_ctx_t	*ctx);
 void	aes_128_key_expansion(const uint8_t *key, uint8_t *keysched);
 
 //////////////////////////////////
@@ -153,6 +155,14 @@ int		aes_cipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
 //////////////////////////////////
 
 int		aes_uncipher(aes_ctx_t *a, aes_buf_t *data, aes_buf_t *out, uint8_t *key);
+
+//////////////////////////////////
+//
+//		UTILS AES FUNCTIONS
+//
+//////////////////////////////////
+
+void print_m128i_with_string(char* string, __m128i data);
 
 //////////////////////////////////
 //

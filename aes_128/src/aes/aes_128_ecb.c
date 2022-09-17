@@ -14,7 +14,11 @@ int	aes_128_ecb_enc(const uint8_t *in, uint8_t *out, size_t length, char *key, u
 	(void)ivec;
 	__m128i	tmp;
 	int i, j;
-	length >>= 4;
+
+	if (length & 0xF)
+		length = (length>>4)+1;
+	else
+		length >>= 4;
 	for (i = 0; i < (int)length; i++)
 	{
 		tmp = _mm_loadu_si128(&((__m128i*)in)[i]);
@@ -35,7 +39,11 @@ int	aes_128_ecb_dec(const uint8_t *in, uint8_t *out, size_t length, char *key, u
 	(void)ivec;
 	__m128i	tmp;
 	int	i, j;
-	length >>= 4;
+
+	if (length & 0xF)
+		length = (length >> 4)+1;
+	else
+		length >>= 4;
 	for (i = 0; i < (int)length; i++)
 	{
 		tmp = _mm_loadu_si128(&((__m128i *)in)[i]);
